@@ -1,9 +1,7 @@
-Here’s a simple and comprehensive `README.md` for your Terraform project that explains the directory structure, what the project does, and how to use it.
-
 ```markdown
 # Terraform AWS S3 & CloudFront Infrastructure
 
-This Terraform project provisions an AWS infrastructure that includes S3 buckets and a CloudFront distribution. The project is modular and uses two modules:
+This Terraform project provisions an AWS infrastructure that includes S3 buckets and a CloudFront distribution. We can use this Terraform script for deplpying a static website to Cloudfront with S3 as origin. It will also create bucket policy, if website is deployed and still you are not able to access your site, then manually create origin access identity with same S3 from console, and update it in S3 policy & remove old S3 policy. The project is modular and uses two modules:
 - **S3 Module**: Provisions an AWS S3 bucket with specific settings.
 - **CloudFront Module**: Provisions an AWS CloudFront distribution with an origin that points to the S3 bucket.
 
