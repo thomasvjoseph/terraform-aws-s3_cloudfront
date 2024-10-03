@@ -27,7 +27,7 @@ It may be necessary to manually create an Origin Access Identity (OAI) in the AW
 Example Configuration
 ```hcl
   module "s3_cloudfront" {
-    source = "github.com/your-repository/terraform-aws-s3-cloudfront"
+    source = "github.com/thomasvjoseph/terraform-aws-s3-cloudfront"
 
     s3_bucket_name           = "your-website-bucket"
     cloudfront_description   = "My CloudFront Distribution"
