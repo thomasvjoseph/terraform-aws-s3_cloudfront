@@ -1,5 +1,3 @@
-Here’s a README.md file that describes your Terraform AWS S3 and CloudFront module, including an explanation of the purpose, usage instructions, inputs, outputs, and an example of how to use the module:
-
 # Terraform AWS S3 & CloudFront Infrastructure Module
 
 This Terraform module provisions an AWS infrastructure for deploying a static website using Amazon S3 as the origin and CloudFront as the content delivery network (CDN). It includes automatic creation of an S3 bucket, a CloudFront distribution, and associated policies for secure access.
@@ -14,36 +12,37 @@ This Terraform module provisions an AWS infrastructure for deploying a static we
   
 If after deployment, you encounter an error such as:
 ```xml
-<Error>
-  <Code>AccessDenied</Code>
-  <Message>Access Denied</Message>
-  <RequestId>123456qwerty</RequestId>
-  <HostId>qbjlTQsuqWDwLDFiU8388JgbYQZmLIZghlL3nhN0gWZRXW4wbB0V1MtRpfA4WP/DzrjrTxdgRc3DznoKuGsNww==</HostId>
-</Error>
+  <Error>
+    <Code>AccessDenied</Code>
+    <Message>Access Denied</Message>
+    <RequestId>123456qwerty</RequestId>
+    <HostId>qbjlTQsuqWDwLDFiU8388JgbYQZmLIZghlL3nhN0gWZRXW4wbB0V1MtRpfA4WP/DzrjrTxdgRc3DznoKuGsNww==</HostId>
+  </Error>
+```
 
 It may be necessary to manually create an Origin Access Identity (OAI) in the AWS console, update the S3 bucket policy with the correct OAI, and remove any old S3 bucket policy created by Terraform.
 
-Usage
+## Usage
 
 Example Configuration
+```hcl
+  module "s3_cloudfront" {
+    source = "github.com/your-repository/terraform-aws-s3-cloudfront"
 
-module "s3_cloudfront" {
-  source = "github.com/your-repository/terraform-aws-s3-cloudfront"
-
-  s3_bucket_name           = "your-website-bucket"
-  cloudfront_description   = "My CloudFront Distribution"
-  name                     = "my-static-website"
-  env                      = "production"
-}
-
-Steps:
+    s3_bucket_name           = "your-website-bucket"
+    cloudfront_description   = "My CloudFront Distribution"
+    name                     = "my-static-website"
+    env                      = "production"
+  }
+```
+## Steps:
 
 	1.	Deploy your static website files to the S3 bucket that is created by this module.
 	2.	Ensure that the CloudFront distribution is configured correctly to point to the S3 bucket.
 	3.	If necessary, invalidate the CloudFront cache to reflect the latest changes to your website.
 	4.	If you get an access error, manually update the Origin Access Identity in the AWS console and update the bucket policy accordingly.
 
-Inputs
+## Inputs
 
 Name	Description	Type	Default	Required
 s3_bucket_name	The name of the S3 bucket to create.	string	n/a	yes
@@ -51,7 +50,7 @@ cloudfront_description	Description for the CloudFront distribution	string	n/a	ye
 name	Tag name to be applied to AWS resources.	string	n/a	yes
 env	Environment tag for the AWS resources.	string	n/a	yes
 
-Outputs
+## Outputs
 
 Name	Description
 s3_bucket_arn	ARN of the created S3 bucket.
@@ -61,11 +60,10 @@ cloudfront_distribution_domain_name	Domain name of the CloudFront distribution.
 cloudfront_distribution_id	ID of the CloudFront distribution.
 origin_access_identity	Origin Access Identity for the CloudFront distribution.
 
-Prerequisites
+## Prerequisites
 
 	•	Terraform 0.12 or later
 	•	AWS credentials configured with appropriate permissions to create S3 buckets, CloudFront distributions, and policies.
-
 Manual Steps (if needed)
 
 If your CloudFront distribution encounters issues (e.g., Access Denied errors), follow these steps:
