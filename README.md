@@ -44,21 +44,27 @@ Example Configuration
 
 ## Inputs
 
-Name	Description	Type	Default	Required
-s3_bucket_name	The name of the S3 bucket to create.	string	n/a	yes
-cloudfront_description	Description for the CloudFront distribution	string	n/a	yes
-name	Tag name to be applied to AWS resources.	string	n/a	yes
-env	Environment tag for the AWS resources.	string	n/a	yes
+| Name                       | Description                                 | Type     | Default | Required |
+|----------------------------|---------------------------------------------|----------|---------|----------|
+| `s3_bucket_name`           | The name of the S3 bucket to create         | `string` | n/a     | yes      |
+| `cloudfront_description`   | Description for the CloudFront distribution | `string` | n/a     | yes      |
+| `name`                     | Tag name to be applied to AWS resources.    | `string` | n/a     | yes      |
+| `env`                      | nvironment tag for the AWS resources        | `string` | n/a     | yes      |
+
 
 ## Outputs
 
-Name	Description
-s3_bucket_arn	ARN of the created S3 bucket.
-s3_bucket_domain_name	Domain name of the S3 bucket.
-s3_bucket_name	Name of the created S3 bucket.
-cloudfront_distribution_domain_name	Domain name of the CloudFront distribution.
-cloudfront_distribution_id	ID of the CloudFront distribution.
-origin_access_identity	Origin Access Identity for the CloudFront distribution.
+| Name                                      | Description                                             |
+|-------------------------------------------|---------------------------------------------------------|
+| `s3_bucket_arn`                           | ARN of the created S3 bucket.                           |
+| `s3_bucket_domain_name`                   | Domain name of the S3 bucket.                           |
+| `s3_bucket_name`                          | Name of the created S3 bucket.                          |
+| `cloudfront_distribution_domain_name`     |   Domain name of the CloudFront distribution.           |
+| `cloudfront_distribution_id`              | ID of the CloudFront distribution.                      |
+| `origin_access_identity`                  |  Origin Access Identity for the CloudFront distribution.|   
+
+
+	
 
 ## Prerequisites
 
@@ -73,10 +79,12 @@ If your CloudFront distribution encounters issues (e.g., Access Denied errors), 
 	3.	Update the S3 bucket policy to allow the new OAI to access the S3 bucket.
 	4.	Remove the old S3 bucket policy created by Terraform, if applicable.
 
-License
+## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This module is licensed under the MIT License.
 
-This `README.md` provides a detailed guide on how to use the Terraform module, the inputs and outputs, and includes an example configuration to help users quickly integrate it into their own projects. The "Manual Steps" section gives clear instructions in case the CloudFront distribution faces any issues with access.
+## Author: 
 
-Author: thomas joseph
+thomas joseph
+- [linkedin](https://www.linkedin.com/in/thomas-joseph-88792b132/)
+- [medium](https://medium.com/@thomasvjoseph)
