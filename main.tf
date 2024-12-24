@@ -1,31 +1,31 @@
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket                    = var.s3_bucket_name
-  force_destroy             = true
+  bucket        = var.s3_bucket_name
+  force_destroy = true
 
-  tags                      = {
-    Name                    = var.name
-    Environment             = var.env
-    Terraform               = "true"
+  tags = {
+    Name        = var.name
+    Environment = var.env
+    Terraform   = "true"
   }
 }
 
 resource "aws_cloudfront_origin_access_identity" "cf_oai" {
-  comment                   = "Origin Access Identity for ${aws_s3_bucket.s3_bucket.bucket_domain_name}"
+  comment = "Origin Access Identity for ${aws_s3_bucket.s3_bucket.bucket_domain_name}"
 }
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   origin {
-    domain_name             = aws_s3_bucket.s3_bucket.bucket_domain_name
-    origin_id               = aws_s3_bucket.s3_bucket.bucket
+    domain_name = aws_s3_bucket.s3_bucket.bucket_domain_name
+    origin_id   = aws_s3_bucket.s3_bucket.bucket
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.cf_oai.cloudfront_access_identity_path
     }
   }
 
-  enabled                   = true
-  is_ipv6_enabled           = true
-  default_root_object       = "index.html"
+  enabled             = true
+  is_ipv6_enabled     = true
+  default_root_object = "index.html"
 
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -41,15 +41,8 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
 
   restrictions {
     geo_restriction {
-      restriction_type    = "none"
+      restriction_type = "none"
     }
-  }
-
-  custom_error_response {
-    error_code            = 403
-    response_code         = 200
-    response_page_path    = "/index.html"
-    error_caching_min_ttl = 10
   }
 
   viewer_certificate {
@@ -57,32 +50,30 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   }
 
   tags = {
-    Name                = var.name
-    Environment         = var.env
-    Terraform           = "true"
+    Name        = var.name
+    Environment = var.env
+    Terraform   = "true"
   }
-  comment               = var.cloudfront_description
-  depends_on            = [aws_s3_bucket.s3_bucket]
+  comment    = var.cloudfront_description
+  depends_on = [aws_s3_bucket.s3_bucket]
 }
+
 # S3 - Bucket Policy for CloudFront
 data "aws_iam_policy_document" "s3_policy" {
   statement {
-    actions           = ["s3:GetObject"]
-    resources         = ["${aws_s3_bucket.s3_bucket.arn}/*"]
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.s3_bucket.arn}/*"]
 
     principals {
-      type            = "AWS"
-      identifiers     = [aws_cloudfront_origin_access_identity.cf_oai.iam_arn]
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${aws_cloudfront_origin_access_identity.cf_oai.id}"]
     }
   }
 }
 
 resource "aws_s3_bucket_policy" "s3_bucket_policy" {
-  bucket              = aws_s3_bucket.s3_bucket.id
-  policy              = data.aws_iam_policy_document.s3_policy.json
+  bucket = aws_s3_bucket.s3_bucket.id
+  policy = data.aws_iam_policy_document.s3_policy.json
 
-  # This ensures that if the policy changes, the old one will be deleted
-  lifecycle {
-    replace_triggered_by = [aws_cloudfront_origin_access_identity.cf_oai.cloudfront_access_identity_path]
-  }
+  depends_on = [aws_cloudfront_origin_access_identity.cf_oai]
 }
