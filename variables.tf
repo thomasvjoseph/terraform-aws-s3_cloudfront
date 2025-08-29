@@ -8,12 +8,8 @@ variable "cloudfront_description" {
   type        = string
 }
 
-variable "name" {
-  description = "tag name"
-  type        = string
-}
-
-variable "env" {
-  description = "tag env"
-  type        = string
+variable "tags" {
+  description = "A map of tags to assign to the resources"
+  type        = map(string)
+  default     = {}
 }

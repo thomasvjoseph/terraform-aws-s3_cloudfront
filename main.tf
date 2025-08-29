@@ -1,12 +1,7 @@
 resource "aws_s3_bucket" "s3_bucket" {
   bucket        = var.s3_bucket_name
   force_destroy = true
-
-  tags = {
-    Name        = var.name
-    Environment = var.env
-    Terraform   = "true"
-  }
+  tags          = var.tags
 }
 
 resource "aws_cloudfront_origin_access_identity" "cf_oai" {
@@ -49,13 +44,9 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     cloudfront_default_certificate = true
   }
 
-  tags = {
-    Name        = var.name
-    Environment = var.env
-    Terraform   = "true"
-  }
-  comment    = var.cloudfront_description
-  depends_on = [aws_s3_bucket.s3_bucket]
+  tags          = var.tags
+  comment       = var.cloudfront_description
+  depends_on    = [aws_s3_bucket.s3_bucket]
 }
 
 # S3 - Bucket Policy for CloudFront
