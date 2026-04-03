@@ -43,6 +43,48 @@ resource "aws_cloudfront_origin_access_control" "oac" {
 }
 
 # ---------------------------
+# Origin Request Policy
+# ---------------------------
+resource "aws_cloudfront_origin_request_policy" "this" {
+  count = var.create_origin_request_policy ? 1 : 0
+
+  name    = var.origin_request_policy_name
+  comment = "Custom origin request policy"
+
+  cookies_config {
+    cookie_behavior = var.forward_cookies
+
+    dynamic "cookies" {
+      for_each = var.forward_cookies == "whitelist" ? [1] : []
+      content {
+        items = var.forward_cookie_names
+      }
+    }
+  }
+
+  headers_config {
+    header_behavior = length(var.forward_headers) > 0 ? "whitelist" : "none"
+
+    dynamic "headers" {
+      for_each = length(var.forward_headers) > 0 ? [1] : []
+      content {
+        items = var.forward_headers
+      }
+    }
+  }
+
+  query_strings_config {
+    query_string_behavior = var.forward_query_strings
+
+    dynamic "query_strings" {
+      for_each = var.forward_query_strings == "whitelist" ? [1] : []
+      content {
+        items = var.forward_query_string_names
+      }
+    }
+  }
+}
+# ---------------------------
 # CloudFront
 # ---------------------------
 resource "aws_cloudfront_distribution" "this" {
@@ -117,6 +159,10 @@ resource "aws_cloudfront_distribution" "this" {
 
     cache_policy_id            = var.cache_policy_id
     response_headers_policy_id = var.response_headers_policy_id
+
+    origin_request_policy_id = var.origin_request_policy_id != null ? var.origin_request_policy_id : (
+      var.create_origin_request_policy ? aws_cloudfront_origin_request_policy.this[0].id : null
+    )
 
     min_ttl     = 0
     default_ttl = 3600

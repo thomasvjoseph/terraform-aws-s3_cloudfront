@@ -82,6 +82,48 @@ variable "geo_locations_list" {
   default = []
 }
 
+variable "create_origin_request_policy" {
+  description = "Create a custom origin request policy"
+  type        = bool
+  default     = false
+}
+
+variable "origin_request_policy_name" {
+  type    = string
+  default = "custom-origin-request-policy"
+}
+
+variable "origin_request_policy_id" {
+  description = "Use existing origin request policy ID instead of creating one"
+  type        = string
+  default     = null
+}
+
+variable "forward_headers" {
+  type    = list(string)
+  default = []
+}
+
+variable "forward_cookies" {
+  type    = string
+  default = "none" # none | all | whitelist
+}
+
+variable "forward_cookie_names" {
+  type    = list(string)
+  default = []
+}
+
+variable "forward_query_strings" {
+  type    = string
+  default = "none" # none | all | whitelist
+}
+
+variable "forward_query_string_names" {
+  type    = list(string)
+  default = []
+}
+
 variable "tags" {
   type    = map(string)
   default = {}
