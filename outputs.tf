@@ -1,21 +1,19 @@
-output "s3_bucket_arn" {
-  value = aws_s3_bucket.s3_bucket.arn
-}
-output "s3_bucket_domain_name" {
-  value = aws_s3_bucket.s3_bucket.bucket_domain_name
-}
-output "s3_bucket_name" {
-  value = aws_s3_bucket.s3_bucket.bucket
+output "s3_primary_bucket_name" {
+  value = try(aws_s3_bucket.primary[0].bucket, null)
 }
 
-output "cloudfront_distribution_domain_name" {
-  value = aws_cloudfront_distribution.cloudfront_distribution.domain_name
+output "s3_failover_bucket_name" {
+  value = try(aws_s3_bucket.failover[0].bucket, null)
 }
 
 output "cloudfront_distribution_id" {
-  value = aws_cloudfront_distribution.cloudfront_distribution.id
+  value = try(aws_cloudfront_distribution.this[0].id, null)
 }
 
-output "origin_access_identity" {
-  value = aws_cloudfront_origin_access_identity.cf_oai.cloudfront_access_identity_path
+output "cloudfront_domain_name" {
+  value = try(aws_cloudfront_distribution.this[0].domain_name, null)
+}
+
+output "oai_path" {
+  value = try(aws_cloudfront_origin_access_identity.oai[0].cloudfront_access_identity_path, null)
 }
